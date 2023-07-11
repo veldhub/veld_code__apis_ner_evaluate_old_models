@@ -300,7 +300,7 @@ def write_eval_to_file(eval_file_path, eval_data):
     with open(eval_file_path, "w") as f:
         for m, e in eval_data.items():
             eval_data_description = e["eval_data_description"]
-            f.write("- model: " + m + "\n")
+            f.write("- model: **" + m + "**\n")
             f.write("  - evaluation data description:\n")
             f.write(f"    - evaluation file: {eval_data_description['evaluation_file']}\n")
             f.write(
