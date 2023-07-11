@@ -1,0 +1,18 @@
+x-veld:
+    veld_executable:
+        input:
+            path: "/veld/input/"
+            type: ""
+        output:
+            path: "/veld/output/"
+            type: ""
+
+services:
+    veld:
+        build: .
+        volumes:
+            - ./:/veld/exec/
+#        ports:
+#            - 8888:8888
+#        network_mode: "host"
+
