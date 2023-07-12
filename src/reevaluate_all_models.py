@@ -284,7 +284,7 @@ def evaluate_model_2020_04_30():
     eval_data_dict[model_dir]["eval_data_description"] = {
         "evaluation_file": evaluation_file, 
         "evaluation_count_sentences": count_sentences,
-        "evaluation_count_tags": count_tags,
+        "evaluation_count_tags": f"{count_tags} (BILOU tags, so plenty of redundancies)",
         "ner_tags": ner_valid_list,
     }
     eval_data_dict[model_dir]["evaluations"] = [
