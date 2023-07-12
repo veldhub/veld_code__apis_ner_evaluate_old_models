@@ -322,5 +322,5 @@ if __name__ == "__main__":
     evaluate_model_2019_12_03()
     evaluate_models_2020_01_02_until_2020_04_16()
     evaluate_model_2020_04_30()
-    write_eval_to_file("/veld/output/eval.md", eval_data_dict)
+    write_eval_to_file("/veld/output/reevaluations_all.md", eval_data_dict)
 
