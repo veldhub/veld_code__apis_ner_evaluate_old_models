@@ -1,4 +1,4 @@
-# experimental VELD executable
+# Experimental VELD executable
 
 This is a prototype being used for a real task in the intavia project. It reevaluates models 
 trained using spacy2 here: https://gitlab.oeaw.ac.at/acdh-ch/apis/spacy-ner .
