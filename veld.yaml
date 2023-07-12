@@ -2,17 +2,16 @@ x-veld:
     veld_executable:
         input:
             path: "/veld/input/"
-            type: ""
+            type: "custom"
+            description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
         output:
             path: "/veld/output/"
-            type: ""
+            type: "md"
+            description: "evaluation report of the models from the apis spacy-ner repo."
 
 services:
     veld:
         build: .
         volumes:
-            - ./:/veld/exec/
-#        ports:
-#            - 8888:8888
-#        network_mode: "host"
+            - ./:/veld/executable/
 
