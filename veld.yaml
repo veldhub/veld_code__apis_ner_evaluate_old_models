@@ -22,4 +22,5 @@ services:
     build: .
     volumes:
       - ./src/:/veld/executable/
+    command: python /veld/executable/reevaluate_all_models.py
 
