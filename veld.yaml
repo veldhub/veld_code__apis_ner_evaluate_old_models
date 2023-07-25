@@ -1,17 +1,25 @@
 x-veld:
-    veld_executable:
-        input:
-            path: "/veld/input/"
-            type: "custom"
-            description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
-        output:
-            path: "/veld/output/"
-            type: "md"
-            description: "evaluation report of the models from the apis spacy-ner repo."
+  executable:
+    about:
+      description: "hard-coded evaluation of several spacy2.2.4 models."
+      scope:
+        - "NLP"
+        - "Machine Learning"
+        - "Named Entity Recognition"
+    input:
+      path: /veld/input/
+      format: "custom"
+      kind: "custom"
+      description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
+    output:
+      path: /veld/output/
+      format: "md"
+      kind: "evaluation report"
+      description: "evaluation report of the models from the apis spacy-ner repo."
 
 services:
-    veld:
-        build: .
-        volumes:
-            - ./:/veld/executable/
+  veld:
+    build: .
+    volumes:
+      - ./src/:/veld/executable/
 
