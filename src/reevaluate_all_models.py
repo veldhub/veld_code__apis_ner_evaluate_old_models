@@ -15,6 +15,19 @@ del nlp
 eval_data_dict = {}
 
 
+def check_for_overlap(train_data, eval_data):
+    train_data_set = set(train_data)
+    eval_data_set = set(eval_data)
+    set_overlap = set()
+    count_overlap = 0
+    for t in train_data_set:
+        if t in eval_data_set:
+            count_overlap += 1
+            set_overlap.add(t)
+    count_not_overlap = len(train_data_set) + len(eval_data_set) - count_overlap
+    return count_overlap, count_not_overlap
+
+
 def evaluate_model_2019_12_03():
     def read_data_from_txt(mypath):
         """
@@ -50,15 +63,19 @@ def evaluate_model_2019_12_03():
                 i += 1
                 mydata.append( (t, e, None, None) )
         return mydata
-
+    
     # __sresch__ custom code, using the given txt reader function above made for that data shape
     print("running 'evaluate_model_2019_12_03'")
     model_dir = "ner_apis_2019-12-03_23:32:24"
     nlp = spacy.load(f"/veld/input/{model_dir}/nlp")
     ner_tags = nlp.get_pipe('ner').labels
     print(f"NER tags: {ner_tags}")
+    train_data = read_data_from_txt(f"/veld/input/{model_dir}/corpus/trainset.txt")
     evaluation_file = f"{model_dir}/corpus/evalset.txt"
     eval_data = read_data_from_txt(f"/veld/input/{evaluation_file}")
+    count_overlap, count_not_overlap = check_for_overlap(
+        [d[0] for d in train_data], [d[0] for d in eval_data]
+    )
     evaluation_count_sentences = len(eval_data)
     print(f"number of sentences in evaluation data: {evaluation_count_sentences}")
     evaluation_count_tags = sum([len(e[1]['entities']) for e in eval_data])
@@ -68,10 +85,12 @@ def evaluate_model_2019_12_03():
     print(f"p: {scorer.ents_p}, r: {scorer.ents_r}")
     eval_data_dict[model_dir] = {}
     eval_data_dict[model_dir]["eval_data_description"] = {
-        "evaluation_file": evaluation_file, 
+        "evaluation_file": evaluation_file,
         "evaluation_count_sentences": evaluation_count_sentences,
         "evaluation_count_tags": evaluation_count_tags,
         "ner_tags": ner_tags,
+        "count_overlap": count_overlap,
+        "count_not_overlap": count_not_overlap,
     }
     eval_data_dict[model_dir]["evaluations"] = [
         {
@@ -80,7 +99,7 @@ def evaluate_model_2019_12_03():
             "r": scorer.ents_r,
         }
     ]
-
+    
 
 def evaluate_models_2020_01_02_until_2020_04_16():
     """
@@ -94,7 +113,9 @@ def evaluate_models_2020_01_02_until_2020_04_16():
         print("The abbreviations files during data extraction and model training did not match. " +
             "I will now remove the datapoints from the evaluation set whose tokenization differs.")
         with nerer.nlp.disable_pipes(*pipes_to_disable):
-            sent_doc_gp = [ (d.sentence, nerer.nlp(d.sentence), d.goldparse) for d in nerer.evaluation_data ]
+            sent_doc_gp = [
+                (d.sentence, nerer.nlp(d.sentence), d.goldparse) for d in nerer.evaluation_data
+            ]
         num_prob = 0
         ok = []
         for s,d,g in sent_doc_gp:
@@ -144,9 +165,9 @@ def evaluate_models_2020_01_02_until_2020_04_16():
         # ============= LOAD MODEL
 
         print(f"Loading model at /veld/input/{e['model_dir']} ...")
-        nerer = ner.model_ner.NERer.from_saved(
-            f"/veld/input/{e['model_dir']}", 
-            load_training_data=False
+        nerer = ner.model_ner.NERer.from_saved(f"/veld/input/{e['model_dir']}")
+        count_overlap, count_not_overlap = check_for_overlap(
+            [d.sentence for d in nerer.training_data], [d.sentence for d in nerer.evaluation_data]
         )
         print("Finished loading model.")
         evaluation_count_sentences = len(nerer.evaluation_data)
@@ -161,6 +182,8 @@ def evaluate_models_2020_01_02_until_2020_04_16():
             "evaluation_count_sentences": evaluation_count_sentences,
             "evaluation_count_tags": evaluation_count_tags,
             "ner_tags": ner_tags,
+            "count_overlap": count_overlap,
+            "count_not_overlap": count_not_overlap,
         }
 
         # ================= MANUAL EVALUATION
@@ -181,7 +204,10 @@ def evaluate_models_2020_01_02_until_2020_04_16():
         # ================= SPACY'S EVALUATION
 
         if e["run_eval_0"]:
-            print("Running spacy's evaluation (E0) with (string, GoldParse) as input over only the 'ner' pipe ...")
+            print(
+                "Running spacy's evaluation (E0) with (string, GoldParse) as input over only the"
+                " 'ner' pipe ..."
+            )
             assert nerer.nlp.has_pipe('ner')
             pipes_to_disable = []
             if nerer.nlp.has_pipe('tagger'):
@@ -204,7 +230,10 @@ def evaluate_models_2020_01_02_until_2020_04_16():
             )
 
         if e["run_eval_1"]:
-            print("Running spacy's evaluation (E1) with (string, GoldParse) as input over the pipes 'tagger', 'parser', and 'ner' ...")
+            print(
+                "Running spacy's evaluation (E1) with (string, GoldParse) as input over the pipes"
+                " 'tagger', 'parser', and 'ner' ..."
+            )
             assert nerer.nlp.has_pipe('tagger')
             assert nerer.nlp.has_pipe('parser')
             assert nerer.nlp.has_pipe('ner')
@@ -271,7 +300,10 @@ def evaluate_model_2020_04_30():
                                 count_fp += 1
                             elif ner_pred == "" and ner_real != "O" :
                                 count_fn += 1
-
+    nerer = ner.model_ner.NERer.from_saved(f"/veld/input/{model_dir}", load_evaluation_data=False)
+    count_overlap, count_not_overlap = check_for_overlap(
+        [d.sentence for d in nerer.training_data], [d["raw"] for d in eval_data]
+    )
     print(f"number of tags in evaluation data: {count_tags}")
     print(f"number of sentences in evaluation data: {count_sentences}")
     if count_tp + count_fp + count_fn != count_total:
@@ -286,6 +318,8 @@ def evaluate_model_2020_04_30():
         "evaluation_count_sentences": count_sentences,
         "evaluation_count_tags": f"{count_tags} (BILOU tags, so plenty of redundancies)",
         "ner_tags": ner_valid_list,
+        "count_overlap": count_overlap,
+        "count_not_overlap": count_not_overlap,
     }
     eval_data_dict[model_dir]["evaluations"] = [
         {
@@ -296,31 +330,42 @@ def evaluate_model_2020_04_30():
     ]
 
 
-def write_eval_to_file(eval_file_path, eval_data):
+def write_eval_to_file(eval_file_path):
     with open(eval_file_path, "w") as f:
-        for m, e in eval_data.items():
+        for m, e in eval_data_dict.items():
             eval_data_description = e["eval_data_description"]
             f.write("- model: **" + m + "**\n")
             f.write("  - evaluation data description:\n")
             f.write(f"    - evaluation file: {eval_data_description['evaluation_file']}\n")
             f.write(
                 "    - evaluation data size: " 
-                + f"count sentences: {eval_data_description['evaluation_count_sentences']}"
-                + f", count NER tags: {eval_data_description['evaluation_count_tags']}\n"
+                f"count sentences: {eval_data_description['evaluation_count_sentences']}"
+                f", count NER tags: {eval_data_description['evaluation_count_tags']}\n"
             )
             f.write(f"    - NER tags: {eval_data_description['ner_tags']}\n")
+            f.write(
+                f"    - count data overlap of train and eval set:"
+                f" {eval_data_description['count_overlap']}\n"
+            )
+            f.write(
+                f"    - count data unique in train and eval sets:"
+                f" {eval_data_description['count_not_overlap']}\n"
+            )
             f.write("  - evaluations:\n")
             for e_instance in e["evaluations"]:
                 f.write(
                     f"    - {e_instance['evaluation']}: "
-                    + f"**p: {round(e_instance['p'], 2)}, "
-                    + f"r: {round(e_instance['r'], 2)}**\n"
+                    f"**p: {round(e_instance['p'], 2)}, "
+                    f"r: {round(e_instance['r'], 2)}**\n"
                 )
 
 
-if __name__ == "__main__":
+def main():
     evaluate_model_2019_12_03()
     evaluate_models_2020_01_02_until_2020_04_16()
     evaluate_model_2020_04_30()
-    write_eval_to_file("/veld/output/reevaluations_all.md", eval_data_dict)
-
+    write_eval_to_file("/veld/output/reevaluations_all.md")
+    
+    
+if __name__ == "__main__":
+    main()
