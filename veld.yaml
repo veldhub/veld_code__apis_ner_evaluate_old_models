@@ -1,20 +1,24 @@
 x-veld:
   executable:
     about:
-      description: "hard-coded evaluation of several spacy2.2.4 models."
-      scope:
+      description: "hard-coded evaluation of several spaCy2.2.4 models."
+      topic:
         - "NLP"
-        - "Machine Learning"
-        - "Named Entity Recognition"
+        - "Machine learning"
+        - "Named entity recognition"
     input:
-      path: /veld/input/
+      type: "folder"
       format: "custom"
-      kind: "custom"
+      content:
+        - "Named entity recognition gold data"
+        - "Machine learning model"
+      path: /veld/input/
       description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
     output:
-      path: /veld/output/
+      type: "file"
       format: "md"
-      kind: "evaluation report"
+      content: "evaluation report"
+      path: /veld/output/reevaluations_all.md
       description: "evaluation report of the models from the apis spacy-ner repo."
 
 services:
