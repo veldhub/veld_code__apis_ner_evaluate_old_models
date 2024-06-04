@@ -1,5 +1,5 @@
 x-veld:
-  executable:
+  code:
     about:
       description: "hard-coded evaluation of several spaCy2.2.4 models."
       topic:
@@ -25,6 +25,6 @@ services:
   veld:
     build: .
     volumes:
-      - ./src/:/veld/executable/
-    command: python /veld/executable/reevaluate_all_models.py
+      - ./src/:/veld/code/
+    command: python /veld/code/reevaluate_all_models.py
 
