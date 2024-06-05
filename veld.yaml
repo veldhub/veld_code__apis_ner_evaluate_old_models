@@ -2,29 +2,42 @@ x-veld:
   code:
     about:
       description: "hard-coded evaluation of several spaCy2.2.4 models."
-      topic:
+      topics:
         - "NLP"
         - "Machine learning"
         - "Named entity recognition"
-    input:
-      type: "folder"
-      format: "custom"
-      content:
-        - "Named entity recognition gold data"
-        - "Machine learning model"
-      path: /veld/input/
+
+    inputs:
+      volume: /veld/input/
       description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
-    output:
-      type: "file"
-      format: "md"
-      content: "evaluation report"
-      path: /veld/output/reevaluations_all.md
+      file_formats:
+        - "pickle"
+        - "txt"
+        - "json"
+        - "spacy model"
+      contents:
+        - "NER gold data"
+        - "Machine learning model"
+        - "NLP model"
+
+    outputs:
+      volume: /veld/output/
       description: "evaluation report of the models from the apis spacy-ner repo."
+      file_formats: "md"
+      contents: "evaluation report"
+
+    environment:
+      eval_result_file: 
+        description: "an md file containing the evaluation scores"
+        type: path
+        path_prefix: "/veld/output/"
 
 services:
   veld:
     build: .
+    command: python /veld/code/reevaluate_all_models.py
     volumes:
       - ./src/:/veld/code/
-    command: python /veld/code/reevaluate_all_models.py
+    environment:
+      eval_result_file: null
 
