@@ -1,9 +1,15 @@
-import spacy
 import json
+import os
+
+import spacy
+
 # __sresch__ these imports need to be done, because otherwise the unpickling of metadata would crash
 # in the function NERer.load_metadata . No idea why.
 from ner.model_ner import ModelType, TrainingStyle
 import ner.model_ner
+
+
+OUT_EVAL_RESULT_FILE = "/veld/output/" + os.getenv("out_eval_result_file")
 
 
 print("starting evaluations")
@@ -330,8 +336,8 @@ def evaluate_model_2020_04_30():
     ]
 
 
-def write_eval_to_file(eval_file_path):
-    with open(eval_file_path, "w") as f:
+def write_eval_to_file():
+    with open(OUT_EVAL_RESULT_FILE, "w") as f:
         for m, e in eval_data_dict.items():
             eval_data_description = e["eval_data_description"]
             f.write("- model: **" + m + "**\n")
@@ -364,7 +370,7 @@ def main():
     evaluate_model_2019_12_03()
     evaluate_models_2020_01_02_until_2020_04_16()
     evaluate_model_2020_04_30()
-    write_eval_to_file("/veld/output/reevaluations_all.md")
+    write_eval_to_file()
     
     
 if __name__ == "__main__":

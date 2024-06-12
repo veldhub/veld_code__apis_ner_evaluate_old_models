@@ -27,10 +27,9 @@ x-veld:
       contents: "evaluation report"
 
     environment:
-      eval_result_file: 
-        description: "an md file containing the evaluation scores"
-        type: path
-        path_prefix: "/veld/output/"
+      out_eval_result: 
+        type: file
+        volume: /veld/output/
 
 services:
   veld:
@@ -39,5 +38,5 @@ services:
     volumes:
       - ./src/:/veld/code/
     environment:
-      eval_result_file: null
+      out_eval_result_file: null
 
