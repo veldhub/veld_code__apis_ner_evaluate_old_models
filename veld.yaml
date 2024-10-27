@@ -1,16 +1,15 @@
 x-veld:
   code:
-    about:
-      description: "hard-coded evaluation of several spaCy2.2.4 models."
-      topics:
-        - "NLP"
-        - "Machine learning"
-        - "Named entity recognition"
+    description: "hard-coded evaluation of several spaCy2.2.4 models."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "Named entity recognition"
 
     inputs:
       volume: /veld/input/
       description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
-      file_formats:
+      file_type:
         - "pickle"
         - "txt"
         - "json"
@@ -22,14 +21,10 @@ x-veld:
 
     outputs:
       volume: /veld/output/
+      environment: out_eval_result
       description: "evaluation report of the models from the apis spacy-ner repo."
-      file_formats: "md"
+      file_type: "md"
       contents: "evaluation report"
-
-    environment:
-      out_eval_result: 
-        type: file
-        volume: /veld/output/
 
 services:
   veld:
