@@ -7,17 +7,18 @@ x-veld:
       - "Named entity recognition"
 
     inputs:
-      volume: /veld/input/
-      description: "This input is hard-wired to the apis spacy-ner repo and not made for generic usage."
-      file_type:
-        - "pickle"
-        - "txt"
-        - "json"
-        - "spacy model"
-      contents:
-        - "NER gold data"
-        - "Machine learning model"
-        - "NLP model"
+      - volume: /veld/input/
+        description: "This input is hard-wired to the apis spacy-ner repo and not made for generic 
+          usage."
+        file_type:
+          - "pickle"
+          - "txt"
+          - "json"
+          - "spacy model"
+        contents:
+          - "NER gold data"
+          - "Machine learning model"
+          - "NLP model"
 
     outputs:
       volume: /veld/output/
@@ -27,7 +28,7 @@ x-veld:
       contents: "evaluation report"
 
 services:
-  veld:
+  veld_evaluate:
     build: .
     command: python /veld/code/reevaluate_all_models.py
     volumes:
