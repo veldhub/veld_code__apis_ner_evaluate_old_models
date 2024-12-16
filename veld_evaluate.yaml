@@ -21,11 +21,11 @@ x-veld:
           - "NLP model"
 
     outputs:
-      volume: /veld/output/
-      environment: out_eval_result
-      description: "evaluation report of the models from the apis spacy-ner repo."
-      file_type: "md"
-      contents: "evaluation report"
+      - volume: /veld/output/
+        environment: out_eval_result
+        description: "evaluation report of the models from the apis spacy-ner repo."
+        file_type: "md"
+        contents: "evaluation report"
 
 services:
   veld_evaluate:
