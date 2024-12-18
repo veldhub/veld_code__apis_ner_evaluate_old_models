@@ -14,7 +14,7 @@ x-veld:
           - "pickle"
           - "txt"
           - "json"
-          - "spacy model"
+          - "spaCy model"
         content:
           - "NER gold data"
           - "Machine learning model"
