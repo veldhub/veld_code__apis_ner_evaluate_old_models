@@ -1,7 +1,7 @@
-# Experimental VELD executable
+# APIS NER evaluate
 
-This is a prototype being used for a real task in the intavia project. It reevaluates models trained
-using spacy2 here: https://gitlab.oeaw.ac.at/acdh-ch/apis/spacy-ner .
+This is a code veld being used for a real task in the intavia project. It reevaluates models 
+trained using spacy2 here: https://gitlab.oeaw.ac.at/acdh-ch/apis/spacy-ner .
 
 This repo is a VELD executable, meaning it is not supposed to run on its own. It is wired into a
 VELD chain here: https://gitlab.oeaw.ac.at/acdh-ch/nlp/veld_chain_5_apis_ner_evaluate_old_models
