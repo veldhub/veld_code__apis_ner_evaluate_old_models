@@ -3,8 +3,8 @@ x-veld:
     description: "hard-coded evaluation of several spaCy2.2.4 models."
     topic:
       - "NLP"
-      - "Machine learning"
-      - "Named entity recognition"
+      - "Machine Learning"
+      - "Named Entity Recognition"
 
     input:
       - volume: /veld/input/
@@ -17,7 +17,7 @@ x-veld:
           - "spaCy model"
         content:
           - "NER gold data"
-          - "Machine learning model"
+          - "Machine Learning model"
           - "NLP model"
 
     output:
